@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE = "campsnap-filter-v8";
+const CACHE = "campsnap-filter-v9";
 const ASSETS = [
 	"./",
 	"index.html",
@@ -9,7 +9,9 @@ const ASSETS = [
 	"app.js",
 	"presets.json",
 	"manifest.webmanifest",
-	"icons/icon.svg",
+	"icons/icon-192.png",
+	"icons/icon-512.png",
+	"icons/favicon-32.png",
 ];
 
 self.addEventListener("install", (event) => {
