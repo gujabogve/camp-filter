@@ -79,3 +79,73 @@ function clamp255Round(v) {
 	const r = Math.round(v);
 	return r < 0 ? 0 : r > 255 ? 255 : r;
 }
+
+// --- filter authoring (used by the creator tool) ------------------------
+// Edit controls compile down into the same matrix + LUTs the firmware reads.
+// Saturation lives in the matrix; everything else is per-channel tone curves.
+const DEFAULT_EDIT = {
+	brightness: 0,   // -100..100
+	contrast: 0,     // -100..100
+	saturation: 0,   // -100..100  (-100 = greyscale)
+	gamma: 1,        // 0.2..3
+	temperature: 0,  // -100..100  (+ warmer)
+	tint: 0,         // -100..100  (+ magenta)
+	fade: 0,         // 0..100  (lifts the blacks)
+};
+
+const LUMA = [0.299, 0.587, 0.114];
+
+/**
+ * Compile edit params into a { matrix, luts } filter.
+ * @param {typeof DEFAULT_EDIT} p
+ */
+function buildFilter(p) {
+	const sat = Math.max(0, 1 + p.saturation / 100);
+	const matrix = [];
+	for (let i = 0; i < 3; i++) {
+		for (let j = 0; j < 3; j++) {
+			const v = (i === j ? sat : 0) + (1 - sat) * LUMA[j];
+			matrix.push(Math.round(v * 1024));
+		}
+	}
+
+	const muls = [1 + p.temperature / 200, 1 - p.tint / 200, 1 - p.temperature / 200];
+	const cf = 1 + p.contrast / 100;
+	const bright = p.brightness / 200;
+	const lift = (p.fade / 100) * 0.35;
+	const invGamma = 1 / (p.gamma || 1);
+
+	const luts = muls.map((mul) => {
+		const t = new Uint8Array(256);
+		for (let i = 0; i < 256; i++) {
+			let n = i / 255;
+			n = (n - 0.5) * cf + 0.5;                  // contrast
+			n += bright;                                // brightness
+			n = Math.pow(Math.max(0, n), invGamma);     // gamma
+			n *= mul;                                   // channel gain (temp/tint)
+			n = lift + n * (1 - lift);                  // fade
+			t[i] = clamp255(Math.round(n * 255));
+		}
+		return t;
+	});
+
+	return { matrix, luts };
+}
+
+/**
+ * Serialize a { matrix, luts } filter to CampSnap .flt text (neutral header).
+ * @param {{ matrix: number[], luts: Uint8Array[] }} filter
+ */
+function serializeFlt(filter) {
+	const m = filter.matrix;
+	const line = (t) => Array.from(t).join(", ");
+	return [
+		"0, 1, 1, 0, 1, 1, 1",
+		`${m[0]}, ${m[1]}, ${m[2]}, `,
+		`${m[3]}, ${m[4]}, ${m[5]}, `,
+		`${m[6]}, ${m[7]}, ${m[8]}`,
+		line(filter.luts[0]),
+		line(filter.luts[1]),
+		line(filter.luts[2]),
+	].join("\n") + "\n";
+}

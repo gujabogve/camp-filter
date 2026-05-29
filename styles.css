@@ -131,6 +131,35 @@ button:hover { filter: brightness(1.08); }
 
 .actions { display: flex; gap: .6rem; }
 
+/* --- creator tool --- */
+.topbar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+.topbar a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.topbar strong { color: var(--muted); font-weight: 500; }
+
+.editor {
+	display: grid; grid-template-columns: 1fr 1fr; gap: .8rem 1.4rem;
+	background: var(--panel); border-radius: 12px; padding: 1rem; margin-top: 1.2rem;
+}
+.editor .row { display: flex; flex-direction: column; gap: .3rem; }
+.editor label { display: flex; justify-content: space-between; color: var(--muted); font-size: .85rem; }
+.editor output { color: var(--text); }
+.editor input[type=range] { width: 100%; accent-color: var(--accent); }
+.editor #reset { background: transparent; color: var(--muted); border: 1px solid var(--line); }
+
+.export { display: flex; align-items: center; gap: .6rem; margin-top: 1rem; }
+.export input[type=text] {
+	flex: 1; padding: .55rem .7rem; border-radius: 8px; font-size: .95rem;
+	background: var(--bg); color: var(--text); border: 1px solid var(--line);
+}
+.note { color: var(--muted); font-size: .8rem; margin-top: .6rem; line-height: 1.5; }
+
+.app-link { display: block; text-align: center; margin: 1.5rem 0 .5rem; }
+.app-link a { color: var(--muted); font-size: .85rem; }
+
+@media (max-width: 600px) {
+	.editor { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 600px) {
 	body { padding: 1rem .85rem; }
 	.drop { min-height: 55vh; padding: 1.1rem; }

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+	<meta name="theme-color" content="#1c1c22" />
+	<link rel="icon" href="icons/favicon-32.png" type="image/png" />
+	<link rel="stylesheet" href="styles.css" />
+	<title>Create filter — Camp Filter</title>
+</head>
+<body>
+	<main>
+		<div class="topbar">
+			<a href="./">&lsaquo; Filters</a>
+			<strong>Create a filter</strong>
+		</div>
+
+		<section class="stage" id="stage">
+			<label class="drop" id="dropImage">
+				<input type="file" id="imageInput" accept="image/*" hidden />
+				<span class="big">Drop a photo to edit</span>
+				<span class="hint">or tap to choose</span>
+			</label>
+
+			<div class="compare" id="compare" hidden>
+				<canvas id="canvas"></canvas>
+				<canvas id="canvasBefore"></canvas>
+				<div class="divider" id="divider"><span class="grip"></span></div>
+				<span class="tag tag-before">before</span>
+				<span class="tag tag-after">after</span>
+				<button class="clear" id="clearImage" type="button" aria-label="Remove photo">&times;</button>
+			</div>
+		</section>
+
+		<section class="editor" id="editor" hidden>
+			<div class="row"><label>Brightness <output id="oBrightness">0</output></label>
+				<input type="range" id="brightness" min="-100" max="100" value="0" /></div>
+			<div class="row"><label>Contrast <output id="oContrast">0</output></label>
+				<input type="range" id="contrast" min="-100" max="100" value="0" /></div>
+			<div class="row"><label>Saturation <output id="oSaturation">0</output></label>
+				<input type="range" id="saturation" min="-100" max="100" value="0" /></div>
+			<div class="row"><label>Gamma <output id="oGamma">1.00</output></label>
+				<input type="range" id="gamma" min="0.2" max="3" step="0.01" value="1" /></div>
+			<div class="row"><label>Temperature <output id="oTemperature">0</output></label>
+				<input type="range" id="temperature" min="-100" max="100" value="0" /></div>
+			<div class="row"><label>Tint <output id="oTint">0</output></label>
+				<input type="range" id="tint" min="-100" max="100" value="0" /></div>
+			<div class="row"><label>Fade <output id="oFade">0</output></label>
+				<input type="range" id="fade" min="0" max="100" value="0" /></div>
+			<div class="row"><label>&nbsp;</label>
+				<button id="reset" type="button">Reset</button></div>
+		</section>
+
+		<section class="export" id="export" hidden>
+			<input type="text" id="filterName" value="myfilter" aria-label="Filter file name" />
+			<span>.flt</span>
+			<button id="download" type="button">Save .flt</button>
+		</section>
+		<p class="note" id="exportNote" hidden>
+			To use on the camera, rename to the slot you want to replace
+			(e.g. <code>std.flt</code>, <code>vtg1.flt</code>, <code>vtg2.flt</code>, <code>bw.flt</code>)
+			and copy to the SD card root.
+		</p>
+	</main>
+
+	<script src="filter.js"></script>
+	<script src="create.js"></script>
+</body>
+</html>
