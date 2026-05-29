@@ -182,3 +182,44 @@ document.getElementById("download").addEventListener("click", () => {
 if ("serviceWorker" in navigator) {
 	window.addEventListener("load", () => navigator.serviceWorker.register("sw.js"));
 }
+
+// --- install prompt ------------------------------------------------------
+const installBanner = document.getElementById("installBanner");
+const installBtn = document.getElementById("installBtn");
+const iosModal = document.getElementById("iosModal");
+
+const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const dismissed = () => localStorage.getItem("installDismissed") === "1";
+
+let deferredPrompt = null;
+
+// Android / desktop Chromium: a real, native install prompt.
+window.addEventListener("beforeinstallprompt", (e) => {
+	e.preventDefault();
+	deferredPrompt = e;
+	if (!dismissed()) { installBanner.hidden = false; }
+});
+
+installBtn.addEventListener("click", async () => {
+	if (deferredPrompt) {
+		deferredPrompt.prompt();
+		await deferredPrompt.userChoice;
+		deferredPrompt = null;
+		installBanner.hidden = true;
+	} else if (isIOS) {
+		iosModal.hidden = false; // iOS has no native prompt — show instructions.
+	}
+});
+
+document.getElementById("installClose").addEventListener("click", () => {
+	installBanner.hidden = true;
+	localStorage.setItem("installDismissed", "1");
+});
+document.getElementById("iosModalClose").addEventListener("click", () => { iosModal.hidden = true; });
+iosModal.addEventListener("click", (e) => { if (e.target === iosModal) { iosModal.hidden = true; } });
+
+window.addEventListener("appinstalled", () => { installBanner.hidden = true; });
+
+// iOS can't fire beforeinstallprompt, so surface the banner manually.
+if (isIOS && !isStandalone && !dismissed()) { installBanner.hidden = false; }

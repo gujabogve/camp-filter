@@ -22,6 +22,29 @@ code { background: #00000033; padding: .1em .35em; border-radius: 4px; }
 
 main { max-width: 880px; margin: 0 auto; }
 
+.install-banner {
+	max-width: 880px; margin: 0 auto 1rem; display: flex; align-items: center; gap: .7rem;
+	background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: .6rem .8rem;
+}
+.install-banner img { width: 34px; height: 34px; border-radius: 8px; }
+.install-banner span { flex: 1; font-size: .9rem; }
+.install-banner .x {
+	background: transparent; color: var(--muted); padding: .2rem .5rem; font-size: 1.2rem; line-height: 1;
+}
+.install-banner .x:hover { color: var(--text); filter: none; }
+
+.modal {
+	position: fixed; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center;
+	background: #000a; padding: 1rem;
+}
+.modal-card {
+	background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+	padding: 1.4rem; max-width: 360px; width: 100%;
+}
+.modal-card h2 { margin: 0 0 .8rem; font-size: 1.1rem; }
+.modal-card ol { margin: 0 0 1.2rem; padding-left: 1.2rem; line-height: 1.6; color: var(--text); }
+.modal-card button { width: 100%; }
+
 .drop {
 	display: flex; flex-direction: column; align-items: center; justify-content: center;
 	gap: .3rem; padding: 1.6rem; text-align: center; width: 100%; min-height: 60vh;

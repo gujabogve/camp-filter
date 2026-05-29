@@ -11,6 +11,25 @@
 	<title>CampSnap Filter</title>
 </head>
 <body>
+	<div class="install-banner" id="installBanner" hidden>
+		<img src="icons/icon-192.png" alt="" />
+		<span>Install Camp Filter for offline, full-screen use.</span>
+		<button id="installBtn" type="button">Install</button>
+		<button id="installClose" class="x" type="button" aria-label="Dismiss">&times;</button>
+	</div>
+
+	<div class="modal" id="iosModal" hidden>
+		<div class="modal-card">
+			<h2>Add to Home Screen</h2>
+			<ol>
+				<li>Tap the <strong>Share</strong> button in Safari's toolbar.</li>
+				<li>Scroll down and tap <strong>Add to Home Screen</strong>.</li>
+				<li>Tap <strong>Add</strong> &mdash; it installs like an app.</li>
+			</ol>
+			<button id="iosModalClose" type="button">Got it</button>
+		</div>
+	</div>
+
 	<main>
 		<section class="stage" id="stage">
 			<label class="drop" id="dropImage">
