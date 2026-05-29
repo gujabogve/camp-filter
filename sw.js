@@ -1,12 +1,13 @@
 "use strict";
 
-const CACHE = "campsnap-filter-v1";
+const CACHE = "campsnap-filter-v2";
 const ASSETS = [
 	"./",
 	"index.html",
 	"styles.css",
 	"filter.js",
 	"app.js",
+	"presets.json",
 	"manifest.webmanifest",
 	"icons/icon.svg",
 ];

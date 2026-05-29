@@ -34,10 +34,22 @@ main { max-width: 880px; margin: 0 auto; }
 .drop .big { font-weight: 600; }
 .drop .hint { color: var(--muted); font-size: .85rem; }
 
-.controls {
-	margin-top: 1.2rem; padding: 1rem; background: var(--panel);
-	border-radius: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: .8rem 1.4rem;
+.preset {
+	margin-top: 1.2rem; padding: 1rem; background: var(--panel); border-radius: 12px;
+	display: flex; align-items: center; gap: .8rem;
 }
+.preset label { font-weight: 600; }
+.preset select {
+	flex: 1; padding: .55rem .7rem; border-radius: 8px; font-size: .95rem;
+	background: var(--bg); color: var(--text); border: 1px solid var(--line);
+}
+
+.controls {
+	margin-top: 1.2rem; padding: 1rem; background: var(--panel); border-radius: 12px;
+}
+.controls h2 { margin: 0 0 .8rem; font-size: .95rem; font-weight: 600; }
+.controls h2 .muted { color: var(--muted); font-weight: 400; }
+.controls .grid { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem 1.4rem; }
 .ctrl { display: flex; flex-direction: column; gap: .3rem; }
 .ctrl label { display: flex; justify-content: space-between; color: var(--muted); font-size: .85rem; }
 .ctrl output { color: var(--text); }
@@ -67,5 +79,5 @@ canvas { max-width: 100%; border-radius: 10px; display: block; background: #000;
 .actions { display: flex; gap: .6rem; }
 
 @media (max-width: 600px) {
-	.drops, .controls { grid-template-columns: 1fr; }
+	.drops, .controls .grid { grid-template-columns: 1fr; }
 }

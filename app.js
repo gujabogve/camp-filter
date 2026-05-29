@@ -1,9 +1,11 @@
 "use strict";
 
-const SLIDERS = ["brightness", "contrast", "saturation", "gamma", "temperature", "tint"];
+const ADJUST_SLIDERS = ["brightness", "contrast", "saturation"];
 
 const state = {
+	filter: IDENTITY_FILTER,
 	params: { ...DEFAULT_PARAMS },
+	presets: /** @type {{ id: string, name: string, matrix: number[], luts: Uint8Array[] }[]} */ ([]),
 	images: /** @type {{ name: string, bitmap: ImageBitmap }[]} */ ([]),
 	active: -1,
 };
@@ -12,9 +14,47 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d", { willReadFrequently: true });
 const thumbs = document.getElementById("thumbs");
 const stage = document.getElementById("stage");
+const presetSelect = document.getElementById("presetSelect");
 
-// --- sliders -------------------------------------------------------------
-for (const id of SLIDERS) {
+// --- presets -------------------------------------------------------------
+loadPresets();
+
+async function loadPresets() {
+	try {
+		const res = await fetch("presets.json");
+		const raw = await res.json();
+		state.presets = raw.map((p) => ({
+			...p,
+			luts: p.luts.map((arr) => Uint8Array.from(arr)),
+		}));
+	} catch {
+		state.presets = [];
+	}
+
+	presetSelect.innerHTML = "";
+	for (const p of state.presets) {
+		const opt = document.createElement("option");
+		opt.value = p.id;
+		opt.textContent = p.name;
+		presetSelect.appendChild(opt);
+	}
+	if (state.presets.length) {
+		state.filter = state.presets[0];
+		render();
+	}
+}
+
+presetSelect.addEventListener("change", () => {
+	const p = state.presets.find((x) => x.id === presetSelect.value);
+	if (p) {
+		state.filter = p;
+		document.getElementById("fltName").textContent = "preset: " + p.name;
+		render();
+	}
+});
+
+// --- adjustment sliders --------------------------------------------------
+for (const id of ADJUST_SLIDERS) {
 	const input = document.getElementById(id);
 	input.addEventListener("input", () => {
 		state.params[id] = parseFloat(input.value);
@@ -24,21 +64,15 @@ for (const id of SLIDERS) {
 }
 document.getElementById("reset").addEventListener("click", () => {
 	state.params = { ...DEFAULT_PARAMS };
-	syncSliders();
+	for (const id of ADJUST_SLIDERS) { document.getElementById(id).value = "0"; }
+	syncOutputs();
 	render();
 });
 
 function syncOutputs() {
-	for (const id of SLIDERS) {
-		const out = document.getElementById("o" + id[0].toUpperCase() + id.slice(1));
-		out.textContent = id === "gamma" ? state.params[id].toFixed(2) : String(state.params[id]);
+	for (const id of ADJUST_SLIDERS) {
+		document.getElementById("o" + id[0].toUpperCase() + id.slice(1)).textContent = String(state.params[id]);
 	}
-}
-function syncSliders() {
-	for (const id of SLIDERS) {
-		document.getElementById(id).value = String(state.params[id]);
-	}
-	syncOutputs();
 }
 
 // --- file inputs + drag/drop --------------------------------------------
@@ -72,20 +106,14 @@ async function handleImages(files) {
 }
 
 async function handleFlt(file) {
-	const text = await file.text();
-	const { params, known, unknown } = parseFlt(text);
-	state.params = params;
-	syncSliders();
+	const filter = parseFlt(await file.text());
+	if (!filter) {
+		document.getElementById("fltName").textContent = "couldn't parse " + file.name;
+		return;
+	}
+	state.filter = filter;
+	document.getElementById("fltName").textContent = "loaded: " + file.name;
 	render();
-
-	document.getElementById("fltName").textContent = file.name;
-	const box = document.getElementById("parsedBox");
-	box.hidden = false;
-	document.getElementById("parsedOut").textContent = JSON.stringify(
-		{ recognised: known, unrecognised: unknown },
-		null,
-		2,
-	);
 }
 
 // --- rendering -----------------------------------------------------------
@@ -117,7 +145,8 @@ function render() {
 	canvas.height = img.bitmap.height;
 	ctx.drawImage(img.bitmap, 0, 0);
 	const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
-	applyFilter(data, state.params);
+	applyCampSnapFilter(data, state.filter);
+	applyAdjustments(data, state.params);
 	ctx.putImageData(data, 0, 0);
 }
 

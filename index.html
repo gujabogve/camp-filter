@@ -27,29 +27,26 @@
 			<label class="drop" id="dropFlt">
 				<input type="file" id="fltInput" accept=".flt,text/plain" hidden />
 				<span class="big">Drop a <code>.flt</code></span>
-				<span class="hint" id="fltName">no filter loaded — using sliders</span>
+				<span class="hint" id="fltName">or pick a built-in preset below</span>
 			</label>
 		</section>
 
-		<section class="controls">
-			<div class="ctrl"><label>Brightness <output id="oBrightness">0</output></label>
-				<input type="range" id="brightness" min="-100" max="100" value="0" /></div>
-			<div class="ctrl"><label>Contrast <output id="oContrast">0</output></label>
-				<input type="range" id="contrast" min="-100" max="100" value="0" /></div>
-			<div class="ctrl"><label>Saturation <output id="oSaturation">0</output></label>
-				<input type="range" id="saturation" min="-100" max="100" value="0" /></div>
-			<div class="ctrl"><label>Gamma <output id="oGamma">1.00</output></label>
-				<input type="range" id="gamma" min="0.1" max="3" step="0.01" value="1" /></div>
-			<div class="ctrl"><label>Temperature <output id="oTemperature">0</output></label>
-				<input type="range" id="temperature" min="-100" max="100" value="0" /></div>
-			<div class="ctrl"><label>Tint <output id="oTint">0</output></label>
-				<input type="range" id="tint" min="-100" max="100" value="0" /></div>
-			<button id="reset" type="button">Reset</button>
+		<section class="preset">
+			<label for="presetSelect">Filter</label>
+			<select id="presetSelect"></select>
 		</section>
 
-		<section class="parsed" id="parsedBox" hidden>
-			<h2>Parsed <code>.flt</code></h2>
-			<pre id="parsedOut"></pre>
+		<section class="controls">
+			<h2>Extra adjustments <span class="muted">(applied after the filter)</span></h2>
+			<div class="grid">
+				<div class="ctrl"><label>Brightness <output id="oBrightness">0</output></label>
+					<input type="range" id="brightness" min="-100" max="100" value="0" /></div>
+				<div class="ctrl"><label>Contrast <output id="oContrast">0</output></label>
+					<input type="range" id="contrast" min="-100" max="100" value="0" /></div>
+				<div class="ctrl"><label>Saturation <output id="oSaturation">0</output></label>
+					<input type="range" id="saturation" min="-100" max="100" value="0" /></div>
+				<button id="reset" type="button">Reset adjustments</button>
+			</div>
 		</section>
 
 		<section class="stage" id="stage" hidden>

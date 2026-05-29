@@ -19,23 +19,32 @@ browser's address bar to use it like a native app, online or off.
 ## Use
 
 1. Drop one or more photos.
-2. Drop a `.flt` file, or adjust the sliders by hand.
-3. Download the current photo, or batch-export all of them.
+2. Pick a built-in preset, or drop your own `.flt` file.
+3. Optionally tweak brightness/contrast/saturation (applied *after* the filter).
+4. Download the current photo, or batch-export all of them.
 
-## How `.flt` parsing works
+## The `.flt` format
 
-CampSnap `.flt` files are plain text. The exact key names aren't officially
-documented, so [`filter.js`](filter.js) parses tolerantly (`key=value`,
-`key:value`, or `key value`; `#`/`;` comments) and reports any keys it doesn't
-recognise in the UI. The recognised keys map to a fixed processing pipeline:
+A CampSnap `.flt` is plain text:
 
-per-channel gain → white balance (temperature/tint) → brightness → contrast →
-gamma → saturation.
+```
+line 1     : 7 header values  (the editor's source sliders; not used at runtime)
+lines 2-4  : a 3x3 colour matrix, fixed-point /1024  (1024 = 1.0)
+lines 5-7  : three 256-entry tone-curve LUTs, one each for R, G, B
+```
 
-If a real `.flt` uses different field names or value ranges, update
-`KEY_ALIASES` and the math in `applyFilter` to match.
+The header values are only the editor's inputs — they're already *compiled into*
+the matrix and curves, which are the complete filter. The runtime pipeline,
+per pixel, is exactly:
 
-## Roadmap
+```
+m   = clamp(round( matrix · [r,g,b] / 1024 ))   // colour mix
+out = [ lutR[m.r], lutG[m.g], lutB[m.b] ]        // per-channel tone curve
+```
 
-- Ship the official CampSnap presets as bundled JSON (convert from `.flt`).
-- Calibrate the pipeline against real camera output.
+Matrix first, then LUT — proven by Cyanotype, whose matrix collapses to
+greyscale while the blue tone lives entirely in the curves (LUT-first would
+wipe it). This makes the reproduction pixel-exact, not an approximation.
+
+The 14 official filters are bundled in [`presets.json`](presets.json),
+generated directly from the `.flt` files.
