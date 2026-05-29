@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 	<meta name="theme-color" content="#1c1c22" />
 	<link rel="manifest" href="manifest.webmanifest" />
 	<link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
@@ -11,52 +11,35 @@
 	<title>CampSnap Filter</title>
 </head>
 <body>
-	<header>
-		<h1>CampSnap Filter</h1>
-		<p class="sub">Apply <code>.flt</code> camera filters to photos after the fact.</p>
-	</header>
-
 	<main>
-		<section class="drops">
+		<section class="stage" id="stage">
 			<label class="drop" id="dropImage">
-				<input type="file" id="imageInput" accept="image/*" multiple hidden />
-				<span class="big">Drop photos</span>
-				<span class="hint">or click to choose (JPEG/PNG, multiple OK)</span>
+				<input type="file" id="imageInput" accept="image/*" hidden />
+				<span class="big">Drop a photo</span>
+				<span class="hint">or tap to choose</span>
 			</label>
 
-			<label class="drop" id="dropFlt">
-				<input type="file" id="fltInput" accept=".flt,text/plain" hidden />
-				<span class="big">Drop a <code>.flt</code></span>
-				<span class="hint" id="fltName">or pick a built-in preset below</span>
-			</label>
-		</section>
-
-		<section class="preset">
-			<label for="presetSelect">Filter</label>
-			<select id="presetSelect"></select>
-		</section>
-
-		<section class="controls">
-			<h2>Extra adjustments <span class="muted">(applied after the filter)</span></h2>
-			<div class="grid">
-				<div class="ctrl"><label>Brightness <output id="oBrightness">0</output></label>
-					<input type="range" id="brightness" min="-100" max="100" value="0" /></div>
-				<div class="ctrl"><label>Contrast <output id="oContrast">0</output></label>
-					<input type="range" id="contrast" min="-100" max="100" value="0" /></div>
-				<div class="ctrl"><label>Saturation <output id="oSaturation">0</output></label>
-					<input type="range" id="saturation" min="-100" max="100" value="0" /></div>
-				<button id="reset" type="button">Reset adjustments</button>
+			<div class="compare" id="compare" hidden>
+				<canvas id="canvas"></canvas>
+				<canvas id="canvasBefore"></canvas>
+				<div class="filmstrip">
+					<button id="prevFilter" type="button" aria-label="Previous filter">&lsaquo;</button>
+					<span id="filterName">&mdash;</span>
+					<button id="nextFilter" type="button" aria-label="Next filter">&rsaquo;</button>
+				</div>
+				<div class="divider" id="divider"><span class="grip"></span></div>
+				<span class="tag tag-before">before</span>
+				<span class="tag tag-after">after</span>
+				<button class="clear" id="clearImage" type="button" aria-label="Remove photo">&times;</button>
 			</div>
 		</section>
 
-		<section class="stage" id="stage" hidden>
-			<canvas id="canvas"></canvas>
-			<div class="thumbs" id="thumbs"></div>
-			<div class="actions">
-				<button id="download" type="button">Download current</button>
-				<button id="downloadAll" type="button">Download all</button>
-			</div>
-		</section>
+		<input type="file" id="fltInput" accept=".flt,text/plain" hidden />
+		<div class="picker" id="picker" hidden></div>
+
+		<div class="actions" id="actions" hidden>
+			<button id="download" type="button">Download</button>
+		</div>
 	</main>
 
 	<script src="filter.js"></script>

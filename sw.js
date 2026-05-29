@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE = "campsnap-filter-v2";
+const CACHE = "campsnap-filter-v8";
 const ASSETS = [
 	"./",
 	"index.html",

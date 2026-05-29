@@ -74,50 +74,6 @@ function applyCampSnapFilter(imageData, filter) {
 	return imageData;
 }
 
-// --- optional extra adjustments, applied AFTER the filter --------------------
-const DEFAULT_PARAMS = {
-	brightness: 0,   // -100..100
-	contrast: 0,     // -100..100
-	saturation: 0,   // -100..100
-};
-
-function isNeutral(p) {
-	return p.brightness === 0 && p.contrast === 0 && p.saturation === 0;
-}
-
-/**
- * @param {ImageData} imageData
- * @param {typeof DEFAULT_PARAMS} p
- */
-function applyAdjustments(imageData, p) {
-	if (isNeutral(p)) { return imageData; }
-	const data = imageData.data;
-	const bright = p.brightness * 2.55;
-	const cVal = p.contrast * 2.55;
-	const cFactor = (259 * (cVal + 255)) / (255 * (259 - cVal));
-	const satFactor = 1 + p.saturation / 100;
-
-	for (let i = 0; i < data.length; i += 4) {
-		let r = data[i] + bright;
-		let g = data[i + 1] + bright;
-		let b = data[i + 2] + bright;
-
-		r = cFactor * (r - 128) + 128;
-		g = cFactor * (g - 128) + 128;
-		b = cFactor * (b - 128) + 128;
-
-		const luma = 0.299 * r + 0.587 * g + 0.114 * b;
-		r = luma + (r - luma) * satFactor;
-		g = luma + (g - luma) * satFactor;
-		b = luma + (b - luma) * satFactor;
-
-		data[i] = clamp255(r);
-		data[i + 1] = clamp255(g);
-		data[i + 2] = clamp255(b);
-	}
-	return imageData;
-}
-
 function clamp255(v) { return v < 0 ? 0 : v > 255 ? 255 : v; }
 function clamp255Round(v) {
 	const r = Math.round(v);
