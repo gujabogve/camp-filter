@@ -1,0 +1,71 @@
+:root {
+	--bg: #1c1c22;
+	--panel: #26262e;
+	--line: #3a3a45;
+	--text: #e8e8ee;
+	--muted: #9a9aa8;
+	--accent: #f2a649;
+}
+
+* { box-sizing: border-box; }
+
+body {
+	margin: 0;
+	font: 15px/1.4 system-ui, sans-serif;
+	background: var(--bg);
+	color: var(--text);
+	padding: 1.5rem;
+}
+
+header h1 { margin: 0 0 .2rem; font-size: 1.4rem; }
+.sub { margin: 0 0 1.2rem; color: var(--muted); }
+code { background: #00000033; padding: .1em .35em; border-radius: 4px; }
+
+main { max-width: 880px; margin: 0 auto; }
+
+.drops { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.drop {
+	display: flex; flex-direction: column; align-items: center; justify-content: center;
+	gap: .3rem; padding: 1.6rem; text-align: center;
+	border: 2px dashed var(--line); border-radius: 12px;
+	background: var(--panel); cursor: pointer; transition: border-color .15s, background .15s;
+}
+.drop.over { border-color: var(--accent); background: #2e2e38; }
+.drop .big { font-weight: 600; }
+.drop .hint { color: var(--muted); font-size: .85rem; }
+
+.controls {
+	margin-top: 1.2rem; padding: 1rem; background: var(--panel);
+	border-radius: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: .8rem 1.4rem;
+}
+.ctrl { display: flex; flex-direction: column; gap: .3rem; }
+.ctrl label { display: flex; justify-content: space-between; color: var(--muted); font-size: .85rem; }
+.ctrl output { color: var(--text); }
+input[type=range] { width: 100%; accent-color: var(--accent); }
+
+button {
+	background: var(--accent); color: #1c1c22; border: 0; border-radius: 8px;
+	padding: .6rem 1rem; font-weight: 600; cursor: pointer; font-size: .9rem;
+}
+button:hover { filter: brightness(1.08); }
+#reset { grid-column: 1 / -1; background: transparent; color: var(--muted); border: 1px solid var(--line); }
+
+.parsed { margin-top: 1.2rem; }
+.parsed pre {
+	background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+	padding: .8rem; overflow: auto; color: var(--muted);
+}
+
+.stage { margin-top: 1.2rem; }
+canvas { max-width: 100%; border-radius: 10px; display: block; background: #000; }
+.thumbs { display: flex; gap: .5rem; flex-wrap: wrap; margin: .8rem 0; }
+.thumbs img {
+	width: 64px; height: 64px; object-fit: cover; border-radius: 6px;
+	border: 2px solid transparent; cursor: pointer;
+}
+.thumbs img.active { border-color: var(--accent); }
+.actions { display: flex; gap: .6rem; }
+
+@media (max-width: 600px) {
+	.drops, .controls { grid-template-columns: 1fr; }
+}

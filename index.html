@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="theme-color" content="#1c1c22" />
+	<link rel="manifest" href="manifest.webmanifest" />
+	<link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+	<link rel="apple-touch-icon" href="icons/icon.svg" />
+	<link rel="stylesheet" href="styles.css" />
+	<title>CampSnap Filter</title>
+</head>
+<body>
+	<header>
+		<h1>CampSnap Filter</h1>
+		<p class="sub">Apply <code>.flt</code> camera filters to photos after the fact.</p>
+	</header>
+
+	<main>
+		<section class="drops">
+			<label class="drop" id="dropImage">
+				<input type="file" id="imageInput" accept="image/*" multiple hidden />
+				<span class="big">Drop photos</span>
+				<span class="hint">or click to choose (JPEG/PNG, multiple OK)</span>
+			</label>
+
+			<label class="drop" id="dropFlt">
+				<input type="file" id="fltInput" accept=".flt,text/plain" hidden />
+				<span class="big">Drop a <code>.flt</code></span>
+				<span class="hint" id="fltName">no filter loaded — using sliders</span>
+			</label>
+		</section>
+
+		<section class="controls">
+			<div class="ctrl"><label>Brightness <output id="oBrightness">0</output></label>
+				<input type="range" id="brightness" min="-100" max="100" value="0" /></div>
+			<div class="ctrl"><label>Contrast <output id="oContrast">0</output></label>
+				<input type="range" id="contrast" min="-100" max="100" value="0" /></div>
+			<div class="ctrl"><label>Saturation <output id="oSaturation">0</output></label>
+				<input type="range" id="saturation" min="-100" max="100" value="0" /></div>
+			<div class="ctrl"><label>Gamma <output id="oGamma">1.00</output></label>
+				<input type="range" id="gamma" min="0.1" max="3" step="0.01" value="1" /></div>
+			<div class="ctrl"><label>Temperature <output id="oTemperature">0</output></label>
+				<input type="range" id="temperature" min="-100" max="100" value="0" /></div>
+			<div class="ctrl"><label>Tint <output id="oTint">0</output></label>
+				<input type="range" id="tint" min="-100" max="100" value="0" /></div>
+			<button id="reset" type="button">Reset</button>
+		</section>
+
+		<section class="parsed" id="parsedBox" hidden>
+			<h2>Parsed <code>.flt</code></h2>
+			<pre id="parsedOut"></pre>
+		</section>
+
+		<section class="stage" id="stage" hidden>
+			<canvas id="canvas"></canvas>
+			<div class="thumbs" id="thumbs"></div>
+			<div class="actions">
+				<button id="download" type="button">Download current</button>
+				<button id="downloadAll" type="button">Download all</button>
+			</div>
+		</section>
+	</main>
+
+	<script src="filter.js"></script>
+	<script src="app.js"></script>
+</body>
+</html>
